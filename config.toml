@@ -1,0 +1,83 @@
+# 项目配置
+#
+# 所有配置的读取优先级都是「环境变量 > 本文件」，环境变量可临时覆盖而不改文件。
+# 本文件是**模板**：仓库里不带任何真实密钥，key 一律留空，用之前自己填。
+#
+# ⚠️ 填完密钥后请不要再把真实 key 提交上去。建议做法：
+#      git update-index --skip-worktree config.toml
+#   让 git 忽略你对本文件的本地修改（内容仍在，只是不再进提交）。
+
+[llm]
+# 由 pipeline_config.py 读取（管线脚本与 web 层共用）
+# 环境变量 LLM_API_URL / LLM_API_KEY / LLM_MODEL 优先
+# 留空则所有需要写稿/编排的功能会给出「请先配置 LLM key」的提示，而不是报错崩溃。
+base_url = "https://api.deepseek.com/v1/chat/completions"
+api_key  = ""
+model    = "deepseek-v4-flash"
+
+# 这里**故意没有** profile（请求参数档）：它按上面的 model / base_url 自动判断，
+# 见 pipeline_config.profile_for()。换模型不用再记得换档。
+#   model 含 k3 / kimi / moonshot → 不带 reasoning_effort（k3 只接受 temperature=1）
+#   其余（DeepSeek 及任何 OpenAI 兼容接口） → 带 reasoning_effort=low
+# 排查时可以临时用环境变量 LLM_PROFILE 盖掉自动判断，别写进本文件。
+
+[tts]
+# 本地 / 线上只是一个音色名前缀，见 tts_backends.py：
+#   故事女声                    → 本地 CosyVoice（无前缀 = 本地）
+#   edge:zh-CN-XiaoxiaoNeural  → 线上 Edge TTS
+#   openai:alloy               → 线上 OpenAI 兼容接口
+# active 只决定页面上默认选中哪一栏，**不影响渲染** —— 渲染只认音色名的前缀。
+active = "cosyvoice"
+
+[tts.backends.edge]
+# Edge 免费且不需要 key，装了 edge-tts 就能用
+label   = "线上 Edge（免费，无需 key）"
+enabled = true
+voice   = "zh-CN-XiaoxiaoNeural"
+
+[tts.backends.openai]
+# 代码在：任何实现了 POST {base_url}/audio/speech 的服务都能接
+# （OpenAI、硅基流动、本地 vLLM-TTS 等）。要用就把 enabled 改 true、
+# 填 base_url/key，音色写 openai:alloy 即可。
+# base_url 给到 /v1 即可，也接受直接给到 /audio/speech
+label    = "OpenAI 兼容接口"
+enabled  = false
+base_url = ""
+api_key  = ""
+model    = "tts-1"
+voice    = "alloy"
+
+[vlm]
+# 本地视觉模型（图片理解）。**触发条件是「手动上传的图片」** ——
+# 自动抽的视频帧、Pexels 搜回来的素材都不喂给它（一张约 10s + 4.2GB 显存）。
+#
+# 权重目录默认 <项目根>/models/Qwen3.5-2B，可用环境变量 VLM_MODEL_DIR 覆盖，
+# 见 project_paths.py。**没有这个模型不影响主流程**：把 enabled 改 false，
+# 或让它指向不存在的目录，手写解说词那条路照常走。
+#
+# 注意：它跑在独立环境里（环境变量 VLM_PYTHON，默认 <根>/vlm-env/bin/python），
+# 因为它的 transformers 版本和 video-env 打架，见 vlm_analyze.py 顶部说明。
+enabled   = true
+model_dir = "models/Qwen3.5-2B"
+timeout   = 120
+
+[pexels]
+# Pexels 素材站 key，免费申请：https://www.pexels.com/api/
+# 读取链：环境变量 PEXELS_API_KEY > 本文件 > MPT_CONFIG 指向的配置（可选）
+# 留空则「搜索:关键词」自动配图/配视频不可用，手动放素材那条路不受影响。
+api_key = ""
+
+[defaults]
+# 界面与智能体的默认值（web/config.py 与 director_agent.py 共用）
+spk_id = "故事女声"    # 需先用 voice_cli.py 注册一个同名音色
+size   = "9:16"
+express = false
+speed  = "中"
+# optimize 默认关：开启后 LLM 编排失败会静默产出一版不同的视频（只是打印一行提示）
+optimize = false
+# 二创关键词确认闸门：false = 停下来等人确认，true = 自动放行
+auto_confirm_keywords = false
+cuda = 0
+
+[runner]
+max_upload_mb = 2048

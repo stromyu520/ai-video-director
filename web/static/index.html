@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>智能剪辑</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">🎬 智能剪辑</div>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-view="projects">项目</button>
+    <button class="tab" data-view="jobs">任务 <span id="jobBadge" class="badge hidden">0</span></button>
+  </nav>
+  <div class="right">
+    <span id="healthDot" class="dot dot-wait" title="检查中…"></span>
+    <span id="healthText" class="muted small">检查中…</span>
+    <button class="btn" id="btnConfig">配置</button>
+  </div>
+</header>
+
+<main>
+  <!-- ============ 项目列表 ============ -->
+  <section id="view-projects" class="view active">
+    <div class="toolbar">
+      <select id="filterCategory"><option value="">全部分类</option></select>
+      <button class="btn" id="btnRefreshProjects">刷新</button>
+      <span class="spacer"></span>
+      <button class="btn btn-primary" id="btnNewProject">新建项目</button>
+    </div>
+    <div id="projectList" class="cards"></div>
+  </section>
+
+  <!-- ============ 任务列表 ============ -->
+  <section id="view-jobs" class="view">
+    <div class="toolbar">
+      <button class="btn" id="btnRefreshJobs">刷新</button>
+      <span class="muted small">进行中的任务会自动刷新；点卡片看日志。</span>
+    </div>
+    <div id="jobList" class="cards"></div>
+  </section>
+
+  <!-- ============ 项目工作台 ============ -->
+  <section id="view-workspace" class="view">
+    <div id="workspace" class="workspace"></div>
+  </section>
+</main>
+
+<!-- ============ 任务详情抽屉 ============ -->
+<div id="drawer" class="drawer hidden">
+  <div class="drawer-head">
+    <div>
+      <div class="drawer-title" id="drawerTitle">任务</div>
+      <div class="muted small" id="drawerSub"></div>
+    </div>
+    <div class="right">
+      <button class="btn btn-danger" id="btnCancel">取消</button>
+      <button class="btn" id="btnCloseDrawer">关闭</button>
+    </div>
+  </div>
+  <div id="drawerBody"></div>
+</div>
+
+<!-- ============ 配置弹窗 ============ -->
+<dialog id="configDlg">
+  <form method="dialog" class="dlg">
+    <h3>配置</h3>
+    <p class="muted small" id="cfgPath"></p>
+
+    <fieldset>
+      <legend>LLM（生成脚本 / 二创编排）</legend>
+      <label>接口地址 <input id="cfgUrl" type="text"
+        placeholder="https://api.deepseek.com/v1/chat/completions"></label>
+      <label>模型 <input id="cfgModel" type="text" placeholder="deepseek-v4-flash"></label>
+      <!-- 这里原来是个「请求参数档」下拉框 —— 撤了。它问的是「这家服务商吃哪套
+           请求参数」，而答案在模型名里已经写着；让人选只是多一处「换了模型忘了
+           换档 → 400」的机会。现在按模型自动判断，只读显示判断结果。 -->
+      <p class="muted small" id="cfgProfileHint"></p>
+      <label>API Key <input id="cfgKey" type="password" placeholder="留空 = 不修改"></label>
+      <p class="muted small" id="cfgKeyHint"></p>
+      <button type="button" class="btn" id="btnTestLLM">测试连接</button>
+      <span id="cfgTestResult" class="small"></span>
+    </fieldset>
+
+    <!-- 「OpenAI 兼容」那套 tts 配置撤了：本机没有这样的服务，留着只是一排
+         填了也没用的空框。后端代码没删 —— 谁真要用，在 config.toml 的
+         [tts.backends.openai] 里填 base_url/key 并置 enabled = true，
+         音色写成 openai:alloy 就能用（见 tts_backends.py）。 -->
+    <fieldset>
+      <legend>配音</legend>
+      <label>默认栏 <select id="cfgTtsActive">
+        <option value="cosyvoice">本地 CosyVoice</option>
+        <option value="edge">线上 Edge</option>
+      </select></label>
+      <p class="muted small">只决定进项目后默认选中哪一栏；进项目里随时能换。
+        本地音色不需要配置，线上 Edge 免费、不需要 key。</p>
+      <label>Edge 默认音色 <input id="cfgEdgeVoice" type="text"
+        placeholder="zh-CN-XiaoxiaoNeural"></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>图片理解（视觉模型）</legend>
+      <label class="inline"><input id="cfgVlmOn" type="checkbox">
+        识别手动上传的图片</label>
+      <label>模型目录 <input id="cfgVlmDir" type="text"
+        placeholder="&lt;项目根&gt;/models/Qwen3.5-2B"></label>
+      <p class="muted small" id="cfgVlmHint"></p>
+    </fieldset>
+
+    <fieldset>
+      <legend>素材（Pexels）</legend>
+      <label>API Key <input id="cfgPexels" type="password" placeholder="留空 = 不修改"></label>
+      <p class="muted small" id="cfgPexelsHint"></p>
+    </fieldset>
+
+    <fieldset>
+      <legend>默认值</legend>
+      <label class="inline"><input id="cfgExpress" type="checkbox"> 情感表现（LLM 标记）</label>
+      <label class="inline"><input id="cfgAutoKw" type="checkbox">
+        二创关键词自动放行（不弹确认）</label>
+    </fieldset>
+
+    <div class="dlg-foot">
+      <button class="btn" value="cancel">关闭</button>
+      <button class="btn btn-primary" id="btnSaveCfg" value="save">保存</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ============ 新建项目弹窗 ============ -->
+<dialog id="newDlg">
+  <form method="dialog" class="dlg">
+    <h3>新建项目</h3>
+    <div class="grid2">
+      <label>分类 <input id="newCategory" type="text" list="newCatList"
+          autocomplete="off" placeholder="选一个或自己输入新的"></label>
+      <label>项目名 <input id="newName" type="text" placeholder="如：女孩多买火车票占座"></label>
+    </div>
+    <!-- datalist 只给建议，不限制填什么：分类本来就是使用者自己定的，
+         用 select 的话想建个新分类就没辙了 -->
+    <datalist id="newCatList"></datalist>
+    <fieldset>
+      <legend>视频类型（进去以后还能改）</legend>
+      <div id="newKinds" class="kinds-col"></div>
+    </fieldset>
+    <div class="dlg-foot">
+      <button class="btn" value="cancel">取消</button>
+      <button class="btn btn-primary" id="btnCreateProject" value="ok">创建并进入</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast hidden"></div>
+
+<script type="module" src="/static/app.js"></script>
+</body>
+</html>

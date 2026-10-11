@@ -1,0 +1,25 @@
+# 视觉模型环境（**可选**功能）—— 装在独立 venv 里，别和主环境混。
+#
+# 为什么要单独一个环境：Qwen3.5 需要 transformers 5.x 才认得 qwen3_5 架构，
+# 而主环境被 CosyVoice 钉在 4.51.3，两者装一起会互相顶掉。
+# 项目里靠 project_paths.VLM_PYTHON 指过去，用子进程调用，互不干扰。
+#
+# 不装也完全不影响主流程：把 config.toml 的 [vlm] enabled 改成 false 即可，
+# 「图片理解」这一步会被跳过（手写解说词那条路照常走）。
+#
+# 装法：
+#     python3 -m venv vlm-env
+#     ./vlm-env/bin/pip install -r vlm-requirements.txt
+#
+# 权重另下（约 4~5GB），放到 models/Qwen3.5-2B/：
+#     modelscope download --model Qwen/Qwen3.5-2B --local_dir models/Qwen3.5-2B
+# 或用环境变量 VLM_MODEL_DIR 指到别处。
+
+--extra-index-url https://download.pytorch.org/whl/cu121
+
+torch==2.5.1+cu121
+transformers==5.14.1
+accelerate==1.14.0
+safetensors==0.8.0
+pillow
+numpy==1.26.4

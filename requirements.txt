@@ -1,0 +1,42 @@
+# 本项目的额外依赖。
+#
+# ⚠️ 请**先装 CosyVoice 自己的依赖**，它锁定了 torch / torchaudio / onnxruntime
+#    等重型包的版本，装反了顺序会出现两个版本互相顶掉：
+#
+#        pip install -r CosyVoice/requirements.txt
+#        pip install -r requirements.txt
+#
+# 版本号对齐的是本机实测可用的组合（Python 3.11 + CUDA 12.1），
+# 不追求最新，追求「装完就能跑」。
+
+# --- Web 层 ---
+fastapi==0.115.6
+uvicorn==0.30.0
+python-multipart==0.0.12
+tomlkit==0.12.0            # 写 config.toml 时保留文件里的注释
+# Python < 3.11 才需要；3.11+ 用标准库 tomllib
+tomli==2.0.1; python_version < "3.11"
+
+# --- 管线核心 ---
+PyYAML==6.0.3
+requests
+tqdm
+Pillow
+scipy
+numpy==1.26.4              # 2.x 与 CosyVoice 的若干依赖不兼容，钉住 1.26
+
+# --- 语音 ---
+faster-whisper==1.2.1      # 转录 + 音色注册时的匹配率检测
+edge-tts==7.2.7            # 线上 TTS，免费无需 key
+pydub==0.25.1
+av==18.0.0                 # faster-whisper 解码音视频用
+
+# --- 视频 ---
+moviepy==2.2.1             # 旧版组装引擎 video_make.py（当前主力是 ffmpeg 版）
+scenedetect==0.7           # 二创的镜头切分
+demucs==4.1.0              # BGM 人声分离（bgm_prep.py --separate）
+
+# 说明：
+# - ffmpeg / ffprobe 不是 pip 包，见 README「系统依赖」
+# - CosyVoice 源码不进本仓库，clone 方式见 README
+# - 视觉模型（图片理解）跑在**独立环境**里，依赖见 vlm-requirements.txt
