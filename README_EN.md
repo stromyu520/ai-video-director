@@ -316,11 +316,11 @@ In the browser: pick a pipeline → fill in parameters → upload material → w
 
 ### Walkthrough
 
-<video src="docs/media/demo.mp4" controls="controls" muted="muted" width="100%"></video>
-
 > The clip shows: create a project → enter title and duration → choose voice / aspect ratio / subtitle style → set up footage → render → preview and download the result.
 
-(If the player above doesn't appear, [download the clip directly](docs/media/demo.mp4).)
+[![Smart video editing web UI walkthrough](docs/media/demo.gif)](docs/media/demo.mp4)
+
+For the sharp version (1920×892), [play `demo.mp4`](docs/media/demo.mp4).
 
 <br>
 

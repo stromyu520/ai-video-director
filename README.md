@@ -314,11 +314,11 @@ python -m web.server              # 或 uvicorn web.server:app
 
 ### 界面演示
 
-<video src="docs/media/demo.mp4" controls="controls" muted="muted" width="100%"></video>
+> 演示流程：新建项目 → 填标题与时长 → 选配音 / 画面比例 / 字幕风格 → 配素材 → 渲染 → 预览并下载成片。
 
-> 演示：新建项目 → 填标题与时长 → 选配音 / 画面比例 / 字幕风格 → 配素材 → 渲染 → 预览并下载成片。
+[![智能剪辑 Web 界面演示](docs/media/demo.gif)](docs/media/demo.mp4)
 
-（如果上面的播放器没有出现，[点这里直接下载观看](docs/media/demo.mp4)）
+想看清晰版（1920×892）[点这里播放 `demo.mp4`](docs/media/demo.mp4)。
 
 <br>
 

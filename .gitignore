@@ -37,8 +37,9 @@ output.*
 *.ass
 *.srt
 
-# 例外：README 里嵌的演示视频（压缩后仅 670KB，随仓库一起分发）
+# 例外：README 里嵌的演示素材（demo.gif 2.5MB 自播放 + demo.mp4 670KB 清晰版）
 !docs/media/*.mp4
+!docs/media/*.gif
 
 # 素材缓存与用户素材
 素材缓存/
