@@ -312,6 +312,14 @@ python -m web.server              # 或 uvicorn web.server:app
 
 浏览器里可以：选管线 → 填参数 → 上传素材 → 实时看进度（SSE）→ 预览下载成片；也能在页面上直接改 LLM / Pexels 配置。配置写回 `config.toml` 时会保留文件里的注释。
 
+### 界面演示
+
+<video src="docs/media/demo.mp4" controls="controls" muted="muted" width="100%"></video>
+
+> 演示：新建项目 → 填标题与时长 → 选配音 / 画面比例 / 字幕风格 → 配素材 → 渲染 → 预览并下载成片。
+
+（如果上面的播放器没有出现，[点这里直接下载观看](docs/media/demo.mp4)）
+
 <br>
 
 ## 配置说明

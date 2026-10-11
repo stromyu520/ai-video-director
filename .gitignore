@@ -37,6 +37,9 @@ output.*
 *.ass
 *.srt
 
+# 例外：README 里嵌的演示视频（压缩后仅 670KB，随仓库一起分发）
+!docs/media/*.mp4
+
 # 素材缓存与用户素材
 素材缓存/
 BGM/

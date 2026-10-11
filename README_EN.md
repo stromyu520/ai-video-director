@@ -314,6 +314,14 @@ python -m web.server              # or: uvicorn web.server:app
 
 In the browser: pick a pipeline → fill in parameters → upload material → watch live progress (SSE) → preview and download the result. LLM / Pexels settings are editable in the UI; writing back to `config.toml` preserves the file's comments.
 
+### Walkthrough
+
+<video src="docs/media/demo.mp4" controls="controls" muted="muted" width="100%"></video>
+
+> The clip shows: create a project → enter title and duration → choose voice / aspect ratio / subtitle style → set up footage → render → preview and download the result.
+
+(If the player above doesn't appear, [download the clip directly](docs/media/demo.mp4).)
+
 <br>
 
 ## Configuration
