@@ -469,13 +469,14 @@ ai-video-director/
 ├── 二创/ 其他/              # 📁 各管线的说明
 ├── requirements.txt
 ├── vlm-requirements.txt
-└── LICENSE
+├── LICENSE
+└── THIRD_PARTY_NOTICES.md
 ```
 
 <br>
 
 ## 许可
 
-[MIT](LICENSE)。本仓库**不含** CosyVoice 源码与任何模型权重，这些需自行安装并遵循其原始许可（CosyVoice 为 Apache 2.0）。
+[MIT](LICENSE)。本仓库**不含** CosyVoice 源码与任何模型权重，这些需自行安装并遵循其原始许可（CosyVoice 为 Apache 2.0）。完整的第三方组件清单见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
-> ⚠️ **声音克隆请合法使用。** 不要克隆未获授权的声音，不要用于伪造他人言论、诈骗或任何违法用途。使用者需自行承担合规责任。
+> ⚠️ **声音克隆请合法使用。** 不要克隆未获授权的声音，不要用于伪造他人言论、诈骗或任何违法用途。使用者需自行承担合规责任。详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

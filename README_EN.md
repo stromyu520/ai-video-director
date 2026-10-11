@@ -471,13 +471,14 @@ ai-video-director/
 ├── 二创/ 其他/              # 📁 per-pipeline notes (Chinese)
 ├── requirements.txt
 ├── vlm-requirements.txt
-└── LICENSE
+├── LICENSE
+└── THIRD_PARTY_NOTICES.md
 ```
 
 <br>
 
 ## License
 
-[MIT](LICENSE). This repository does **not** include CosyVoice source or any model weights — those must be installed separately and are governed by their own licenses (CosyVoice is Apache 2.0).
+[MIT](LICENSE). This repository does **not** include CosyVoice source or any model weights — those must be installed separately and are governed by their own licenses (CosyVoice is Apache 2.0). See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the full list of third-party components.
 
-> ⚠️ **Use voice cloning responsibly.** Do not clone voices without authorization. Do not use this to impersonate people, commit fraud, or for any unlawful purpose. Users are responsible for their own compliance.
+> ⚠️ **Use voice cloning responsibly.** Do not clone voices without authorization. Do not use this to impersonate people, commit fraud, or for any unlawful purpose. Users are responsible for their own compliance. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
